@@ -3,11 +3,24 @@ info:
   title: Campus IoT and Core Business Event Contract
   version: 1.0.0
   description: API chuẩn hóa minh chứng Lab 02 và Lab 03 cho hệ thống hướng sự kiện nhóm B1.
+  contact:
+    name: Nguyen Kim Duc Vuong
+    email: nguyenvuonggg76@gmail.com
+tags:
+  - name: System
+    description: Các endpoint kiểm tra hệ thống
+  - name: Sensors
+    description: Tiếp nhận dữ liệu từ cảm biến IoT
+  - name: Alerts
+    description: Quản lý các cảnh báo trong Campus
 paths:
   /health:
     get:
       summary: Check health status
+      description: Kiểm tra trạng thái hoạt động của hệ thống Ingestion Server.
       operationId: checkHealth
+      tags:
+        - System
       responses:
         '200':
           description: Server hoạt động bình thường
@@ -19,7 +32,10 @@ paths:
   /api/v1/sensors/readings:
     post:
       summary: Tiếp nhận dữ liệu cảm biến IoT
+      description: Nhận và xử lý các thông số nhiệt độ truyền về từ các thiết bị cảm biến trong campus.
       operationId: ingestSensorReading
+      tags:
+        - Sensors
       security:
         - BearerAuth: []
       requestBody:
@@ -54,7 +70,7 @@ paths:
                   readingId:
                     type: string
                     format: uuid
-                    example: "read-77ec9f11-d6ef-b412-0c4c-a9d9dab75191"
+                    example: "3eec9f11-d6ef-4123-8c4c-a9d9dab75191"
                   status:
                     type: string
                     example: "ACCEPTED"
@@ -80,7 +96,10 @@ paths:
   /alerts/recent:
     get:
       summary: Lấy danh sách cảnh báo gần đây
+      description: Trả về danh sách các cảnh báo mới nhất hệ thống ghi nhận được yêu cầu quyền truy cập từ quản trị viên.
       operationId: getRecentAlerts
+      tags:
+        - Alerts
       security:
         - BearerAuth: []
       responses:
@@ -107,7 +126,10 @@ paths:
   /alerts/{id}:
     get:
       summary: Lấy chi tiết một cảnh báo
+      description: Tìm kiếm và hiển thị thông tin chi tiết của một cảnh báo cụ thể thông qua mã định danh UUID.
       operationId: getAlertById
+      tags:
+        - Alerts
       security:
         - BearerAuth: []
       parameters:
@@ -128,7 +150,10 @@ paths:
   /alerts:
     post:
       summary: Đẩy một cảnh báo mới
+      description: Tạo và phát tán một sự kiện cảnh báo mới dựa trên các điều kiện bất thường từ hệ thống giám sát.
       operationId: createAlert
+      tags:
+        - Alerts
       security:
         - BearerAuth: []
       requestBody:
@@ -168,7 +193,7 @@ components:
       properties:
         status:
           type: string
-          enum: [ok, error]
+          example: "ok"
         service:
           type: string
         time:
@@ -188,7 +213,7 @@ components:
           type: string
         severity:
           type: string
-          enum: [LOW, MEDIUM, HIGH, CRITICAL]
+          example: "HIGH"
         message:
           type: string
     AlertMessage:
@@ -211,25 +236,23 @@ components:
           type: string
         severity:
           type: string
-          enum: [LOW, MEDIUM, HIGH, CRITICAL]
+          example: "HIGH"
         message:
           type: string
         relatedEventId:
-          type:
-            - string
-            - "null"
+          type: string
           format: uuid
+          nullable: true
         status:
           type: string
-          enum: [OPEN, IN_PROGRESS, RESOLVED, CLOSED]
+          example: "OPEN"
         createdAt:
           type: string
           format: date-time
         resolvedAt:
-          type:
-            - string
-            - "null"
+          type: string
           format: date-time
+          nullable: true
     ProblemDetails:
       type: object
       required:
@@ -246,6 +269,8 @@ components:
           type: string
         status:
           type: integer
+          minimum: 400
+          maximum: 599
         detail:
           type: string
         instance:

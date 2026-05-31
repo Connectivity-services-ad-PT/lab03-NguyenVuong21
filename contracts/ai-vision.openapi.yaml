@@ -2,9 +2,10 @@ openapi: 3.1.0
 info:
   title: Smart Campus — AI Vision API
   version: 0.3.0
-  description: |
-    Contract mock tối thiểu cho consumer-side smoke test trong FIT4110 Lab 03.
-    File này giúp Camera Stream hoặc Core Business gọi thử AI Vision khi service thật chưa hoàn thiện.
+  description: Contract mock tối thiểu cho consumer-side smoke test trong FIT4110 Lab 03.
+  contact:
+    name: Nguyen Kim Duc Vuong
+    email: vuong.nkdv@example.com
 servers:
   - url: http://localhost:4011
     description: Prism mock server for AI Vision
@@ -134,7 +135,6 @@ components:
           example: CAM01
         label:
           type: string
-          enum: [person, vehicle, unknown]
           example: person
         confidence:
           type: number
@@ -143,7 +143,6 @@ components:
           example: 0.91
         risk_level:
           type: string
-          enum: [low, medium, high]
           example: medium
 
     HealthResponse:
@@ -152,7 +151,6 @@ components:
       properties:
         status:
           type: string
-          enum: [ok]
           example: ok
         service:
           type: string
@@ -178,3 +176,4 @@ components:
           type: string
         instance:
           type: string
+          example: "/detect"
